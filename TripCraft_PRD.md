@@ -38,9 +38,12 @@ Planning a trip involves comparing dozens of packages, researching destinations,
 | Data fetching | TanStack Query |
 | Charts | Recharts (for the analytics/insights feature) |
 | Backend | Node.js + Express.js + TypeScript |
-| Database | MongoDB (Mongoose) |
+| Database | MongoDB (official native driver, no ORM/ODM) |
 | Auth | JWT-based auth + Google Social Login |
 | AI Provider | Gemini or Groq (fast + generous free tier) or OpenAI |
+
+**Confirmed versions in use (as of actual project setup):**
+Next.js 16, React 19, TypeScript 6.x (pinned below 7.x for `ts-node-dev` compatibility), Tailwind CSS v4, Recharts v3, MongoDB native driver v7.x, Express v5.
 
 ---
 
@@ -58,6 +61,8 @@ Planning a trip involves comparing dozens of packages, researching destinations,
 | `/ai/planner` | Protected | AI Itinerary Generator |
 | `/ai/assistant` | Protected | AI Chat Assistant |
 | `/about`, `/contact`, `/blog` | Public | Additional pages |
+| `app/loading.tsx`, `app/explore/loading.tsx`, `app/packages/[id]/loading.tsx` | N/A (special files) | Route-level loading skeletons (Next.js App Router convention) |
+| `app/not-found.tsx` | N/A (special file) | Global 404 page, triggered via `notFound()` on invalid package IDs |
 
 ---
 
@@ -137,7 +142,11 @@ Table/grid of the user's own listed packages with View / Delete actions.
 
 ---
 
-## 9. Data Models (MongoDB, simplified)
+## 9. Data Models (MongoDB — native driver, TypeScript interfaces not schemas)
+
+No ORM/ODM (no Mongoose). Collections are queried directly via the `mongodb`
+driver; shape/validation is enforced through TypeScript interfaces in
+`src/types/`, not database-level schemas.
 
 ```
 User        { name, email, passwordHash, avatar, provider, role, createdAt }
@@ -156,6 +165,7 @@ Recommendation { userId, packageId, score, reason, createdAt }
 - Consistent card sizing, spacing, and border-radius system-wide
 - Fully responsive (mobile/tablet/desktop)
 - Zero placeholder/lorem-ipsum content — use real (or realistically written) destinations and copy
+- All images use the Next.js `<Image>` component (`next/image`), never plain `<img>` — every external image domain (e.g. picsum.photos) must be registered in `next.config.ts` under `images.remotePatterns`
 
 ---
 
