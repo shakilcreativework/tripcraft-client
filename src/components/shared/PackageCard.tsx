@@ -11,6 +11,7 @@ export interface PackageCardProps {
   rating: number;
   location: string;
   imageUrl: string;
+  priority?: boolean;
 }
 
 export default function PackageCard({
@@ -22,6 +23,7 @@ export default function PackageCard({
   rating,
   location,
   imageUrl,
+  priority = false,
 }: PackageCardProps) {
   return (
     <div className="group flex flex-col bg-[var(--card)] rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-all duration-300 border border-[var(--border)]">
@@ -31,6 +33,8 @@ export default function PackageCard({
           src={imageUrl}
           alt={title}
           fill
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           className="object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
