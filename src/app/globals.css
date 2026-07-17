@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "@heroui/styles";
 
 /* -------------------------------------------------------------------------- */
 /*                                LIGHT THEME                                 */
@@ -246,21 +246,29 @@
 
 /* custom css */
 /* full page scroll bar hide */
-html, body {
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE & Edge */
-  scroll-behavior: smooth;      /* smooth scroll */
+html,
+body {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE & Edge */
+  scroll-behavior: smooth;
+  /* smooth scroll */
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;                /* Chrome, Safari */
+  display: none;
+  /* Chrome, Safari */
 }
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
