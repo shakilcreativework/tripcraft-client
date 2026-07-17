@@ -1,26 +1,266 @@
 @import "tailwindcss";
+@import "@heroui/styles";
+
+/* -------------------------------------------------------------------------- */
+/*                                LIGHT THEME                                 */
+/* -------------------------------------------------------------------------- */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---------------------------------------------------------------------- */
+  /* Base Background System                                                 */
+  /* ---------------------------------------------------------------------- */
+
+  /* --background: #fcfcfc; */
+  --background: #FAF8F3;
+  --surface: #ffffff;
+  --surface-2: #fafafa;
+  --surface-hover: #f5f5f5;
+
+  /* ---------------------------------------------------------------------- */
+  /* Typography                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  --foreground: #18181b;
+  --muted: #595959;
+  --muted-soft: #808080;
+  --border: #fafafa;
+  --input: #e7e5e4;
+
+  /* ---------------------------------------------------------------------- */
+  /* Brand / Accent System                                                  */
+  /* ---------------------------------------------------------------------- */
+
+  --accent: #a8abff;
+  --accent-hover: #9397ff;
+  --accent-soft: #eef0ff;
+
+  --secondary: #ff81b9;
+  --secondary-soft: #ffe3ef;
+
+  --info: #5dbfff;
+  --info-soft: #e4f4ff;
+
+  /* ---------------------------------------------------------------------- */
+  /* Status Colors                                                          */
+  /* ---------------------------------------------------------------------- */
+
+  --success: #0ac864;
+  --success-soft: #e9fff1;
+
+  --warning: #ff9a00;
+  --warning-soft: #fff4dd;
+
+  --danger: #e60a64;
+  --danger-soft: #ffe6f0;
+
+  /* ---------------------------------------------------------------------- */
+  /* Components                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  --card: var(--surface);
+  --footer: var(--surface-2);
+
+  --badge-cart-bg: #18181b;
+  --badge-cart-text: #ffffff;
+
+  --nav-icon-hover: #18181b;
+
+  /* ---------------------------------------------------------------------- */
+  /* Input System                                                           */
+  /* ---------------------------------------------------------------------- */
+
+  --input-bg: #ffffff;
+  --input-hover: #fafafa;
+
+  --input-border: #e8e8e8;
+  --input-focus: #a8abff;
+
+  --input-placeholder: #999999;
+
+  --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* ---------------------------------------------------------------------- */
+  /* Shadows                                                                */
+  /* ---------------------------------------------------------------------- */
+
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.04);
+
+  --shadow-card-hover: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-@theme inline {
+/* -------------------------------------------------------------------------- */
+/*                                 DARK THEME                                 */
+/* -------------------------------------------------------------------------- */
+
+.dark {
+  /* ---------------------------------------------------------------------- */
+  /* Base Background System                                                 */
+  /* ---------------------------------------------------------------------- */
+
+  --background: #090909;
+  --surface: #141414;
+  --surface-2: #18181b;
+  --surface-hover: #202020;
+
+  /* ---------------------------------------------------------------------- */
+  /* Typography                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  --foreground: #fcfcfc;
+  --muted: #a3a3a3;
+  --muted-soft: #808080;
+  --border: #18181b;
+  --input: #2a2d33;
+
+  /* ---------------------------------------------------------------------- */
+  /* Brand / Accent System                                                  */
+  /* ---------------------------------------------------------------------- */
+
+  --accent: #a8abff;
+  --accent-hover: #b8bbff;
+  --accent-soft: rgba(168, 171, 255, 0.12);
+
+  --secondary: #ff81b9;
+  --secondary-soft: rgba(255, 129, 185, 0.12);
+
+  --info: #5dbfff;
+  --info-soft: rgba(93, 191, 255, 0.12);
+
+  /* ---------------------------------------------------------------------- */
+  /* Status Colors                                                          */
+  /* ---------------------------------------------------------------------- */
+
+  --success: #0ac864;
+  --success-soft: rgba(10, 200, 100, 0.14);
+
+  --warning: #ff9a00;
+  --warning-soft: rgba(255, 154, 0, 0.14);
+
+  --danger: #e60a64;
+  --danger-soft: rgba(230, 10, 100, 0.14);
+
+  /* ---------------------------------------------------------------------- */
+  /* Components                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  --card: var(--surface);
+  --footer: var(--surface-2);
+
+  --badge-cart-bg: #ffffff;
+  --badge-cart-text: #111111;
+
+  --nav-icon-hover: #ffffff;
+
+  /* ---------------------------------------------------------------------- */
+  /* Input System                                                           */
+  /* ---------------------------------------------------------------------- */
+
+  --input-bg: #18181b;
+  --input-hover: #202024;
+
+  --input-border: #2c2c2c;
+  --input-focus: #a8abff;
+
+  --input-placeholder: #808080;
+
+  --input-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+  /* ---------------------------------------------------------------------- */
+  /* Shadows                                                                */
+  /* ---------------------------------------------------------------------- */
+
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+  --shadow-card-hover: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              TAILWIND THEME MAP                            */
+/* -------------------------------------------------------------------------- */
+
+@theme {
   --color-background: var(--background);
+
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-soft: var(--muted-soft);
+  --color-border: var(--border);
+  --color-input: var(--input);
+
+  --color-card: var(--card);
+  --color-footer: var(--footer);
+
+  /* Brand */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-soft: var(--secondary-soft);
+
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  /* Status */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  /* Components */
+  --color-badge-cart-bg: var(--badge-cart-bg);
+  --color-badge-cart-text: var(--badge-cart-text);
+  --color-nav-icon-hover: var(--nav-icon-hover);
+
+  /* Input */
+  --color-input-bg: var(--input-bg);
+  --color-input-hover: var(--input-hover);
+  --color-input-border: var(--input-border);
+  --color-input-focus: var(--input-focus);
+  --color-input-placeholder: var(--input-placeholder);
+
+  --shadow-input: var(--input-shadow);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* -------------------------------------------------------------------------- */
+/*                           FONT UTILITY CLASSES                            */
+/* -------------------------------------------------------------------------- */
+
+@utility text-sans {
+  font-family: var(--font-dm-sans);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility text-serif {
+  font-family: var(--font-dm-serif);
+}
+
+@utility text-jakarta {
+  font-family: var(--font-jakarta);
+}
+
+/* custom css */
+/* full page scroll bar hide */
+html, body {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE & Edge */
+  scroll-behavior: smooth;      /* smooth scroll */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
 }
