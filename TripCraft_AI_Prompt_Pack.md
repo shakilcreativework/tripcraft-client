@@ -19,7 +19,7 @@ travel package platform.
 
 STACK:
 - Frontend: Next.js 14 (App Router) + TypeScript + Tailwind CSS + TanStack Query
-- Backend: Node.js + Express.js + TypeScript + MongoDB (Mongoose)
+- Backend: Node.js + Express.js + TypeScript + MongoDB (native driver)
 - Auth: JWT + Google OAuth
 - AI: Groq API (or Gemini — I'll specify per feature)
 
@@ -40,6 +40,14 @@ RULES FOR ALL OUTPUT:
 - Every component must be reusable and in its own file
 - Return COMPLETE file contents, not snippets or "// rest of code same as before"
 - Do not explain the code afterward unless I ask — just give the files
+- ALWAYS use the Next.js `<Image>` component from `next/image` for every image —
+  never a plain `<img>` tag. Every `<Image>` must include: `src`, `alt` (descriptive,
+  never empty), and either both `width`+`height`, or `fill` with a positioned
+  parent (`relative` + explicit height on the container). Also update
+  `next.config.ts` to add every external image domain (e.g. picsum.photos) under
+  `images.remotePatterns` — otherwise Next.js will throw a runtime error for
+  unconfigured hosts. Confirm `next.config.ts` is updated whenever a new image
+  domain is introduced.
 
 Acknowledge this context, then wait for my next prompt.
 ```
@@ -50,7 +58,7 @@ Acknowledge this context, then wait for my next prompt.
 
 ### 2.1 Home / Landing Page
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the TripCraft Home page.
 CONTEXT: Public route. Uses the design system already given.
 SECTIONS (in order): Sticky Navbar (Logo, Home, Explore, About, Login — logged-out
@@ -64,12 +72,14 @@ Footer (logo, quick links, contact info, social icons).
 FORMAT: One file per component (Navbar.tsx, Hero.tsx, etc.) plus a page.tsx that
 assembles them. Use placeholder image URLs from picsum.photos for now.
 CONSTRAINTS: No API calls yet — use realistic static data. Keep every card the
-same size/radius/shadow. Do not use any external UI library.
+same size/radius/shadow. Do not use any external UI library. Use next/image for
+every image, and also generate/update next.config.ts with picsum.photos added
+to images.remotePatterns so the build doesn't error on external hosts.
 ```
 
 ### 2.2 Explore / Listing Page (Package Cards + Filters)
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the TripCraft Explore page with search, filter, sort, and package cards.
 CONTEXT: Public route at /explore.
 REQUIREMENTS:
@@ -85,12 +95,13 @@ REQUIREMENTS:
 FORMAT: Separate files for PackageCard.tsx, FilterBar.tsx, SkeletonCard.tsx,
 ExplorePage (page.tsx). Use static placeholder array of 20 packages for now.
 CONSTRAINTS: Filtering and sorting must work client-side on the static data —
-functional, not just UI. No external UI library.
+functional, not just UI. No external UI library. Use next/image with proper
+width/height (or fill inside a relative container) for every PackageCard image.
 ```
 
 ### 2.3 Package Details Page
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the TripCraft package details page.
 CONTEXT: Public route at /packages/[id].
 REQUIREMENTS:
@@ -108,7 +119,7 @@ CONSTRAINTS: Fully responsive, mobile-first. No external UI library.
 
 ### 2.4 Auth: Login / Register + Protected Route
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build Login and Register pages plus a ProtectedRoute wrapper.
 CONTEXT: Public routes /login and /register. Uses AuthContext (create it).
 REQUIREMENTS:
@@ -129,7 +140,7 @@ the design system. No external UI library.
 
 ### 2.5 Add Package (Protected)
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the "Add Package" form page.
 CONTEXT: Protected route /packages/add — wrap with ProtectedRoute.
 REQUIREMENTS: Form fields — Title, Short Description, Full Description, Price,
@@ -142,7 +153,7 @@ CONSTRAINTS: Clean, spacious form layout, mobile-friendly, matches design system
 
 ### 2.6 Manage Packages (Protected)
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the "Manage Packages" page.
 CONTEXT: Protected route /packages/manage — wrap with ProtectedRoute.
 REQUIREMENTS: Table on desktop / stacked cards on mobile, listing the logged-in
@@ -195,7 +206,7 @@ in plain code, not the LLM.
 
 ### 2.9 Dashboard (assembling everything)
 ```
-ROLE: Senior React developer.
+ROLE: Senior Next.js developer.
 TASK: Build the user Dashboard page.
 CONTEXT: Protected route /dashboard.
 REQUIREMENTS: Welcome section with user's name (from AuthContext), profile card
@@ -210,22 +221,55 @@ CONSTRAINTS: Responsive grid layout, matches design system.
 ### 2.10 Backend Foundations (do this before wiring any frontend to real data)
 ```
 ROLE: Senior backend developer.
-TASK: Set up the Express + TypeScript + MongoDB backend foundation.
-CONTEXT: server/ folder, using Mongoose, JWT auth, bcrypt for passwords.
+TASK: Set up the Express + TypeScript + MongoDB (native driver) backend foundation.
+CONTEXT: server/ folder, using the official `mongodb` npm driver (NOT Mongoose —
+no schemas, no models, query collections directly), JWT auth, bcrypt for passwords.
+The shared `db: Db` handle is exported from src/index.ts after connecting.
 REQUIREMENTS:
-- Mongoose models: User, Package, Review, Itinerary, ChatSession, Recommendation
-  (fields as defined in the PRD)
+- TypeScript interfaces (not Mongoose schemas) for: User, Package, Review,
+  Itinerary, ChatSession, Recommendation (fields as defined in the PRD)
 - Auth routes: POST /api/auth/register, /api/auth/login, /api/auth/google,
-  GET /api/auth/me
-- Package routes: GET /api/packages (with query params for search/filter/sort/
-  pagination), GET /api/packages/:id, POST /api/packages (protected),
-  DELETE /api/packages/:id (protected, owner-only)
+  GET /api/auth/me — using db.collection('users').insertOne/findOne directly
+- Package routes: GET /api/packages (query params for search/filter/sort/
+  pagination via MongoDB query operators), GET /api/packages/:id,
+  POST /api/packages (protected), DELETE /api/packages/:id (protected, owner-only)
 - Middleware: authMiddleware (verifies JWT), errorHandler (centralized)
 - A GET /api/health route returning { status: "ok" }
-FORMAT: Standard Express/TS folder structure — src/models, src/routes,
-src/controllers, src/middleware, src/server.ts
-CONSTRAINTS: Passwords hashed with bcrypt, never returned in API responses.
+FORMAT: Standard Express/TS folder structure — src/types (interfaces),
+src/routes, src/controllers, src/middleware, src/index.ts
+CONSTRAINTS: Passwords hashed with bcrypt, never returned in API responses. All
+collection queries typed using the interfaces from src/types — no raw `any`.
 Centralized error handling — no raw try/catch scattered without a shared handler.
+```
+
+### 2.11 Loading & Not-Found Pages
+```
+ROLE: Senior Next.js developer.
+TASK: Build global loading and not-found UI using Next.js App Router special files.
+CONTEXT: Next.js 14 App Router auto-renders loading.tsx while a route segment is
+fetching data, and not-found.tsx when notFound() is called or a route doesn't
+exist. Uses the design system already given.
+REQUIREMENTS:
+- app/loading.tsx: full-page loading state — centered animated spinner or pulse
+  skeleton matching the design system colors (teal/orange), TripCraft logo or
+  wordmark, no layout shift when real content replaces it.
+- app/packages/[id]/loading.tsx: route-specific skeleton matching the actual
+  Package Details layout (image gallery placeholder, title/price placeholder
+  bars) — not the generic spinner, since this route fetches a single package.
+- app/explore/loading.tsx: skeleton grid matching the PackageCard grid layout
+  (reuse the SkeletonCard component already built in prompt 2.2).
+- app/not-found.tsx: friendly 404 page — clear "Page not found" message, short
+  supporting text, a "Back to Home" button and an "Explore Packages" button,
+  matches the design system, includes a simple illustration or icon (SVG, not
+  an external image).
+- In app/packages/[id]/page.tsx, call notFound() from 'next/navigation' when a
+  package ID doesn't exist in the data source.
+FORMAT: app/loading.tsx, app/explore/loading.tsx, app/packages/[id]/loading.tsx,
+app/not-found.tsx
+CONSTRAINTS: No external UI library. Use next/image only if the not-found page
+includes a raster image (prefer inline SVG instead to avoid needing
+remotePatterns config for a one-off illustration). Keep all four files visually
+consistent with each other and the rest of the app.
 ```
 
 ---
